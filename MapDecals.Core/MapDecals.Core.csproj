@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>MapDecals</AssemblyName>
+    <RootNamespace>MapDecals</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Ship the bundled locale files alongside the module. -->
+  <ItemGroup>
+    <None Include="$(MDRoot).assets\**" Link=".assets\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Self-contained DB access (own SqlSugar connection, decoupled from any other plugin). -->
+  <ItemGroup>
+    <PackageReference Include="SqlSugarCoreNoDrive" Version="5.1.4.211" />
+    <PackageReference Include="MySqlConnector"      Version="2.*" />
+  </ItemGroup>
+
+</Project>

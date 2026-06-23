@@ -1,0 +1,32 @@
+{
+  "MapDecals_Prefix": {
+    "en-US": "{{green}}[MapDecals]{{default}} "
+  },
+  "MapDecals_PingHelper": {
+    "en-US": "{{green}}[MapDecals]{{default}} Selected {{lightblue}}{0}{{default}} — {{purple}}PING{{default}} a surface to place it."
+  },
+  "MapDecals_Placed": {
+    "en-US": "{{green}}[MapDecals]{{default}} Placed {{lightblue}}{0}{{default}}. Saving..."
+  },
+  "MapDecals_Saved": {
+    "en-US": "{{green}}[MapDecals]{{default}} Saved {{lightblue}}{0}{{default}} (#{1})."
+  },
+  "MapDecals_SaveFailed": {
+    "en-US": "{{red}}[MapDecals]{{default}} Save failed — decal removed."
+  },
+  "MapDecals_SpawnFailed": {
+    "en-US": "{{red}}[MapDecals]{{default}} Failed to spawn the decal."
+  },
+  "MapDecals_Deleted": {
+    "en-US": "{{green}}[MapDecals]{{default}} Deleted {{lightblue}}{0}{{default}} (#{1})."
+  },
+  "MapDecals_DeleteFailed": {
+    "en-US": "{{red}}[MapDecals]{{default}} Delete failed in DB."
+  },
+  "MapDecals_Reloaded": {
+    "en-US": "{{green}}[MapDecals]{{default}} Reloaded {0} decal(s) for {1}."
+  },
+  "MapDecals_NoPermission": {
+    "en-US": "{{red}}[MapDecals]{{default}} You do not have permission to manage map decals."
+  }
+}
