@@ -208,8 +208,13 @@ internal sealed class DecalSpawner
         var tm = _bridge.TransmitManager;
 
         // default-transmit = false: hidden for everyone, then opened up per permitted controller.
-        if (!tm.IsEntityHooked(ent))
-            tm.AddEntityHooks(ent, defaultTransmit: false);
+        // AddEntityHooks hard-rejects player pawns (returns false) — env_decal is fine, but always
+        // check the return so a failed hook doesn't silently leave the decal visible to everyone.
+        if (!tm.IsEntityHooked(ent) && !tm.AddEntityHooks(ent, defaultTransmit: false))
+        {
+            _logger.LogWarning("[MapDecals] Failed to hook decal {Index} for VIP visibility — skipping", ent.Index);
+            return;
+        }
 
         foreach (var client in _bridge.ClientManager.GetGameClients())
         {

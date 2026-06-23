@@ -15,7 +15,7 @@ namespace MapDecals.Modules;
 /// The ping's world coordinates become the decal origin. This listener catches <c>player_ping</c>
 /// and, if the pinging admin has a pending selection, spawns + persists the decal there.
 /// </summary>
-internal sealed class DecalPlacementModule : IEventListener
+internal sealed class DecalPlacementModule : IEventListener, IClientListener
 {
     private readonly InterfaceBridge              _bridge;
     private readonly MapDecalsConfig              _config;
@@ -30,6 +30,7 @@ internal sealed class DecalPlacementModule : IEventListener
     /// <summary>Decrementing key for tracking a freshly-spawned decal before its DB id is known.</summary>
     private long _tempIdSeq = -1;
 
+    // IEventListener / IClientListener share these two members.
     public int ListenerPriority => 0;
     public int ListenerVersion  => IEventListener.ApiVersion;
 
@@ -53,10 +54,12 @@ internal sealed class DecalPlacementModule : IEventListener
     {
         _bridge.EventManager.InstallEventListener(this);
         _bridge.EventManager.HookEvent("player_ping");
+        _bridge.ClientManager.InstallClientListener(this);
     }
 
     public void Stop()
     {
+        _bridge.ClientManager.RemoveClientListener(this);
         _bridge.EventManager.RemoveEventListener(this);
         _pending.Clear();
     }
@@ -146,4 +149,19 @@ internal sealed class DecalPlacementModule : IEventListener
             _logger.LogInformation("[MapDecals] Saved decal #{Id} '{Name}' on {Map}", row.Id, decalName, row.Map);
         });
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // IClientListener — drop per-slot pending placement so a reused slot can't
+    // inherit a disconnected admin's armed decal.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public void OnClientDisconnecting(IGameClient client, NetworkDisconnectionReason reason)
+        => _pending.TryRemove((byte) client.Slot.AsPrimitive(), out _);
+
+    public void OnClientDisconnected(IGameClient client, NetworkDisconnectionReason reason) { }
+    public void OnClientConnected(IGameClient client) { }
+    public void OnClientPutInServer(IGameClient client) { }
+    public void OnClientPostAdminCheck(IGameClient client) { }
+    public void OnClientSettingChanged(IGameClient client) { }
+    public void OnAdminCacheReload() { }
 }
